@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Weekly Report</h2>
+
+<canvas id="chart"></canvas>
+
+<script>
+const data = {{ habit_data|safe }};
+
+new Chart(document.getElementById("chart"), {
+    type: "line",
+    data: {
+        labels: data.map(x => x.day),
+        datasets: [{
+            data: data.map(x => x.count),
+        }]
+    }
+});
+</script>
+
+{% endblock %}

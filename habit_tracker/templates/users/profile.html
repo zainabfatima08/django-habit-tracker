@@ -1,0 +1,14 @@
+<div id="profile-box">
+
+    <form method="post"
+          hx-post="{% url 'profile' %}"
+          hx-swap="none">
+
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit">Save</button>
+
+    </form>
+
+</div>

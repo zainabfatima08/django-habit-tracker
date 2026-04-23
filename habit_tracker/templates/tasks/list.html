@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Tasks</h2>
+
+<form method="post" action="{% url 'task_create' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button>Add Task</button>
+</form>
+
+{% for t in tasks %}
+<div class="item">
+
+    <strong>{{ t.title }}</strong>
+
+    <button hx-post="{% url 'task_toggle' t.id %}"
+            hx-swap="innerHTML">
+        Toggle
+    </button>
+
+    <form method="post" action="{% url 'task_delete' t.id %}">
+        {% csrf_token %}
+        <button>Delete</button>
+    </form>
+
+</div>
+{% endfor %}
+
+{% endblock %}

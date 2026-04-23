@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="header">
+
+    <h2>{{ habit.title }}</h2>
+
+    <p>
+        Current Streak: <strong>{{ streak }}</strong>
+    </p>
+
+</div>
+
+<div class="actions">
+
+    <button
+        hx-post="{% url 'toggle_habit' habit.id %}"
+        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+        hx-target="#toggle-result"
+        hx-swap="innerHTML">
+
+        Toggle Today
+    </button>
+
+    <div id="toggle-result"></div>
+
+</div>
+
+<hr>
+
+<h3>History</h3>
+
+<div class="log-list">
+
+    {% for log in logs %}
+
+        <div class="item">
+
+            <span>{{ log.date }}</span>
+
+            {% if log.completed %}
+                <span>Completed</span>
+            {% else %}
+                <span>Not Completed</span>
+            {% endif %}
+
+        </div>
+
+    {% empty %}
+
+        <p>No history yet.</p>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}

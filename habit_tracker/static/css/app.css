@@ -1,0 +1,125 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+}
+
+.layout {
+    display: flex;
+}
+
+.sidebar {
+    width: 220px;
+    background: #111827;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.sidebar a {
+    display: block;
+    color: #94a3b8;
+    padding: 10px;
+    text-decoration: none;
+}
+
+.sidebar a:hover {
+    color: white;
+}
+
+.content {
+    flex: 1;
+    padding: 20px;
+}
+
+.card {
+    background: #1e293b;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.item {
+    padding: 10px;
+    background: #1e293b;
+    margin: 5px 0;
+    border-radius: 6px;
+}
+
+.auth-box {
+    width: 300px;
+    margin: 100px auto;
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.hero {
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.hero h1 {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+.hero p {
+    color: #94a3b8;
+    margin-bottom: 20px;
+}
+
+.actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn {
+    padding: 10px 15px;
+    background: #3b82f6;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+}
+
+.btn.secondary {
+    background: #475569;
+}
+
+.features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-top: 50px;
+}
+
+.header {
+    background: #1e293b;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.actions button {
+    padding: 8px 12px;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.log-list .item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background: #1e293b;
+    margin: 5px 0;
+    border-radius: 6px;
+}

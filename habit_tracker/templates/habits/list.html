@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Habits</h2>
+
+<form method="post" action="{% url 'habit_create' %}">
+    {% csrf_token %}
+    <input type="text" name="title" placeholder="New habit">
+    <button>Add</button>
+</form>
+
+{% for h in habits %}
+<div class="item">
+
+    <a href="{% url 'habit_detail' h.id %}">
+        {{ h.title }}
+    </a>
+
+    <button
+    hx-post="{% url 'toggle_habit' h.id %}"
+    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+    hx-swap="innerHTML">
+    Toggle
+</button>
+
+</div>
+{% endfor %}
+
+{% endblock %}

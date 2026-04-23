@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="hero">
+
+    <h1>Habit & Task Tracker</h1>
+
+    <p>
+        Track habits, manage tasks, and analyze your progress in one place.
+    </p>
+
+    <div class="actions">
+
+        <a href="{% url 'login' %}" class="btn">
+            Login
+        </a>
+
+        <a href="{% url 'signup' %}" class="btn secondary">
+            Create Account
+        </a>
+
+    </div>
+
+</div>
+
+<div class="features">
+
+    <div class="card">
+        <h3>Habit Tracking</h3>
+        <p>Build streaks and track daily consistency.</p>
+    </div>
+
+    <div class="card">
+        <h3>Task Management</h3>
+        <p>Organize tasks by priority and due dates.</p>
+    </div>
+
+    <div class="card">
+        <h3>Analytics</h3>
+        <p>Visual reports of your progress and productivity.</p>
+    </div>
+
+</div>
+
+{% endblock %}
