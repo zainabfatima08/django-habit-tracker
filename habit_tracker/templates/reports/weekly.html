@@ -1,23 +1,58 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="page-header">
+    <h2>Weekly Report</h2>
+    <span class="badge pending">Last 7 days</span>
+</div>
 
-<h2>Weekly Report</h2>
-
-<canvas id="chart"></canvas>
+<div class="card chart-shell">
+    <canvas id="chart"></canvas>
+</div>
 
 <script>
 const data = {{ habit_data|safe }};
 
-new Chart(document.getElementById("chart"), {
-    type: "line",
+new Chart(document.getElementById('chart'), {
+    type: 'line',
     data: {
-        labels: data.map(x => x.day),
+        labels: data.map((x) => x.day),
         datasets: [{
-            data: data.map(x => x.count),
+            label: 'Completed habits',
+            data: data.map((x) => x.count),
+            fill: true,
+            borderColor: '#38bdf8',
+            backgroundColor: 'rgba(56, 189, 248, 0.2)',
+            tension: 0.36,
         }]
+    },
+    options: {
+        plugins: {
+            legend: {
+                labels: {
+                    color: '#e2e8f0'
+                }
+            }
+        },
+        scales: {
+            x: {
+                ticks: {
+                    color: '#cbd5e1'
+                },
+                grid: {
+                    color: 'rgba(148, 163, 184, 0.2)'
+                }
+            },
+            y: {
+                ticks: {
+                    color: '#cbd5e1'
+                },
+                grid: {
+                    color: 'rgba(148, 163, 184, 0.2)'
+                }
+            }
+        }
     }
 });
 </script>
-
 {% endblock %}

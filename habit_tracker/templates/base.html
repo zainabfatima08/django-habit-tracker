@@ -3,27 +3,26 @@
 <html>
 <head>
     <title>Habit Tracker</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
     <script src="https://unpkg.com/htmx.org@1.9.12"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-
 <body class="layout {% if dark_mode %}dark{% endif %}">
-
     <aside class="sidebar">
-        <h2>Tracker</h2>
-
-        <a href="/">Dashboard</a>
-        <a href="/habits/">Habits</a>
-        <a href="/tasks/">Tasks</a>
-        <a href="/reports/weekly/">Reports</a>
-        <a href="/users/profile/">Profile</a>
+        <h2 class="brand">Habit Tracker</h2>
+        <p class="brand-subtitle">Build routines with style.</p>
+        <nav>
+            <a href="/">Dashboard</a>
+            <a href="/habits/">Habits</a>
+            <a href="/tasks/">Tasks</a>
+            <a href="/reports/weekly/">Reports</a>
+            <a href="/users/profile/">Profile</a>
+        </nav>
     </aside>
 
     <main class="content">
         {% block content %}{% endblock %}
     </main>
-
 </body>
 </html>

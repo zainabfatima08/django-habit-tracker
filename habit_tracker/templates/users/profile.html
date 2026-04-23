@@ -1,14 +1,15 @@
-<div id="profile-box">
+{% extends 'base.html' %}
 
-    <form method="post"
-          hx-post="{% url 'profile' %}"
-          hx-swap="none">
+{% block content %}
+<div class="page-header">
+    <h2>Your Profile</h2>
+</div>
 
+<div id="profile-box" class="card">
+    <form method="post" hx-post="{% url 'profile' %}" hx-swap="none">
         {% csrf_token %}
         {{ form.as_p }}
-
         <button type="submit">Save</button>
-
     </form>
-
 </div>
+{% endblock %}

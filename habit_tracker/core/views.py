@@ -14,12 +14,14 @@ class HomeView(View):
 
         if request.user.is_authenticated:
 
-            habits = Habit.objects.filter(user=request.user)[:5]
-            tasks  = Task.objects.filter(user=request.user, completed = False)[:5]
+            habits_qs = Habit.objects.filter(user=request.user)
+            tasks_qs = Task.objects.filter(user=request.user, completed=False)
 
             return render(request, 'core/dashboard.html', {
-                'habits' : habits,
-                'tasks'  : tasks,
+                'habits': habits_qs[:5],
+                'tasks': tasks_qs[:5],
+                'total_habits': habits_qs.count(),
+                'pending_tasks': tasks_qs.count(),
             })
 
         return render(request, 'core/home.html')
