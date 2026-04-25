@@ -1,0 +1,115 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Habit Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'css/app.css' %}?v=20260424">
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="layout {% if dark_mode %}dark{% endif %}">
+
+    <aside class="sidebar">
+
+        <h2 class="brand">Habit Tracker</h2>
+        <p class="brand-subtitle">Build routines with style.</p>
+        <button id="theme-toggle" class="theme-toggle" type="button"><span class="btn-icon" aria-hidden="true">◐</span> Dark Mode</button>
+
+
+        <nav>
+            <a href="/">Dashboard</a>
+            <a href="/habits/">Habits</a>
+            <a href="/tasks/">Tasks</a>
+            <a href="/reports/weekly/">Reports</a>
+            <a href="/users/profile/">Profile</a>
+        </nav>
+
+        {% if request.user.is_authenticated %}
+        <form method="post" action="{% url 'logout' %}" class="sidebar-logout">
+            {% csrf_token %}
+            <button type="submit" class="danger">Logout</button>
+        </form>
+        {% endif %}
+    </aside>
+
+    <main class="content">
+        {% if messages %}
+            <div class="flash-wrap">
+                {% for message in messages %}
+                    <div class="flash-message">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% block content %}{% endblock %}
+    </main>
+
+    <script>
+(() => {
+    const bodyEl = document.body;
+    const rootEl = document.documentElement;
+    const toggleBtn = document.getElementById('theme-toggle');
+
+    const setTheme = (mode) => {
+        const isLight = mode === 'light';
+        bodyEl.classList.toggle('light-mode', isLight);
+        rootEl.classList.toggle('light-mode', isLight);
+        if (toggleBtn) {
+            toggleBtn.innerHTML = isLight
+                ? '<span class="btn-icon" aria-hidden="true">◑</span> Light Mode'
+                : '<span class="btn-icon" aria-hidden="true">◐</span> Dark Mode';
+        }
+    };
+
+    let savedTheme = 'dark';
+    try {
+        savedTheme = localStorage.getItem('tracker-theme') || 'dark';
+    } catch (error) {
+        savedTheme = 'dark';
+    }
+
+    setTheme(savedTheme);
+
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+            const nextTheme = bodyEl.classList.contains('light-mode') ? 'dark' : 'light';
+            setTheme(nextTheme);
+            try {
+                localStorage.setItem('tracker-theme', nextTheme);
+            } catch (error) {
+                // no-op when storage is unavailable
+            }
+        });
+    }
+
+    document.querySelectorAll('[data-counter]').forEach((counter) => {
+        const target = Number(counter.dataset.counter) || 0;
+        let current = 0;
+        const step = Math.max(1, Math.ceil(target / 24));
+        const timer = setInterval(() => {
+            current += step;
+            if (current >= target) {
+                counter.textContent = target;
+                clearInterval(timer);
+                return;
+            }
+            counter.textContent = current;
+        }, 25);
+    });
+
+    document.querySelectorAll('[data-filter-input]').forEach((input) => {
+        const targetSelector = input.dataset.filterInput;
+        const listItems = document.querySelectorAll(`${targetSelector} [data-filter-item]`);
+
+        input.addEventListener('input', (event) => {
+            const term = event.target.value.toLowerCase().trim();
+            listItems.forEach((item) => {
+                item.style.display = item.innerText.toLowerCase().includes(term) ? 'flex' : 'none';
+            });
+        });
+    });
+})();
+</script>
+</body>
+</html>

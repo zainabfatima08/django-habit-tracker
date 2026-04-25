@@ -25,7 +25,7 @@ class WeeklyReportView(View):
             .annotate(day= TruncDay("date"))
             .values("day")
             .annotate(count = Count("id"))
-            .order_by("date")
+            .order_by("day")
         )
         # Task data
 
@@ -40,9 +40,13 @@ class WeeklyReportView(View):
             .annotate(count   = Count("id"))
         )
 
+        habit_data_serialized = [
+            {"day": row["day"].isoformat() if row.get("day") else "", "count": row["count"]}
+            for row in habit_data
+        ]
         context = {
-            "habit_data" : list(habit_data),
-            "task_data"  : list(task_data),
+            "habit_data": habit_data_serialized,
+            "task_data": list(task_data),
         }
 
         return render(request, 'reports/weekly.html', context)

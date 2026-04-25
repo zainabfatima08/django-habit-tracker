@@ -1,33 +1,24 @@
-{% extends 'base.html' %}
+{% extends 'index.html' %}
 
 {% block content %}
 
-<div class="header">
+<div class="header habit-detail-header">
+    <div class="habit-title-row">
+        <h2>{{ habit.title }}</h2>
+        <span class="badge done">Streak: {{ streak }}</span>
+    </div>
 
-    <h2>{{ habit.title }}</h2>
-
-    <p>
-        Current Streak: <strong>{{ streak }}</strong>
-    </p>
-
+    <div class="habit-detail-actions">
+        <button
+            hx-post="{% url 'toggle_habit' habit.id %}"
+            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+            hx-target="#toggle-result"
+            hx-swap="innerHTML">
+            Toggle Today
+        </button>
+        <div id="toggle-result" class="toggle-result"></div>
+    </div>
 </div>
-
-<div class="actions">
-
-    <button
-        hx-post="{% url 'toggle_habit' habit.id %}"
-        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-        hx-target="#toggle-result"
-        hx-swap="innerHTML">
-
-        Toggle Today
-    </button>
-
-    <div id="toggle-result"></div>
-
-</div>
-
-<hr>
 
 <h3>History</h3>
 
@@ -35,24 +26,20 @@
 
     {% for log in logs %}
 
-        <div class="item">
-
-            <span>{{ log.date }}</span>
-
+        <div class="item history-item">
+            <span class="history-date">{{ log.date }}</span>
             {% if log.completed %}
-                <span>Completed</span>
+                <span class="badge done">Completed</span>
             {% else %}
-                <span>Not Completed</span>
+                <span class="badge pending">Not Completed</span>
             {% endif %}
 
         </div>
 
     {% empty %}
 
-        <p>No history yet.</p>
-
+        <div class="item"><span>No history yet.</span></div>
     {% endfor %}
 
 </div>
-
 {% endblock %}

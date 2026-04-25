@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'index.html' %}
 
 {% block content %}
 
@@ -6,20 +6,12 @@
 
     <h1>Habit & Task Tracker</h1>
 
-    <p>
-        Track habits, manage tasks, and analyze your progress in one place.
-    </p>
+    <p>Track routines, finish deep-work tasks, and watch your weekly momentum through visual reports.</p>
 
     <div class="actions">
 
-        <a href="{% url 'login' %}" class="btn">
-            Login
-        </a>
-
-        <a href="{% url 'signup' %}" class="btn secondary">
-            Create Account
-        </a>
-
+        <a href="{% url 'login' %}" class="btn">Login</a>
+        <a href="{% url 'signup' %}" class="btn secondary">Create Account</a>
     </div>
 
 </div>
@@ -29,16 +21,17 @@
     <div class="card">
         <h3>Habit Tracking</h3>
         <p>Build streaks and track daily consistency.</p>
+        <h3>Daily Habit Streaks</h3>
+        <p>Track consistency and keep momentum alive each day.</p>
+    </div>
+
+        <h3>Modern Task Workflow</h3>
+        <p>Organize priorities with quick actions and clear status.</p>
     </div>
 
     <div class="card">
-        <h3>Task Management</h3>
-        <p>Organize tasks by priority and due dates.</p>
-    </div>
-
-    <div class="card">
-        <h3>Analytics</h3>
-        <p>Visual reports of your progress and productivity.</p>
+        <h3>Visual Weekly Reports</h3>
+        <p>See your progress pattern with lightweight charts.</p>
     </div>
 
 </div>

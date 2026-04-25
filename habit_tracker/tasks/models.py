@@ -20,7 +20,10 @@ class Task(models.Model):
     created_at = models.DateTimeField(auto_now_add = True)
 
     def is_overdue(self):
-        return not self.completed and self.due_date < now().date
+        return not self.completed and self.due_date < now().date()
+
+    def days_left(self):
+        return (self.due_date - now().date()).days
 
     def __str__(self):
         return self.title

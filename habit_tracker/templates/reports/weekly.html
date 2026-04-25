@@ -1,21 +1,59 @@
-{% extends 'base.html' %}
+{% extends 'index.html' %}
 
 {% block content %}
+<div class="page-header">
+    <h2>Weekly Report</h2>
+    <span class="badge pending">Last 7 days</span>
+</div>
 
-<h2>Weekly Report</h2>
+<div class="card chart-shell">
+    <canvas id="chart"></canvas>
+</div>
 
-<canvas id="chart"></canvas>
-
+{{ habit_data|json_script:"habit-data" }}
 <script>
-const data = {{ habit_data|safe }};
+const data = JSON.parse(document.getElementById('habit-data').textContent);
 
-new Chart(document.getElementById("chart"), {
-    type: "line",
+new Chart(document.getElementById('chart'), {
+    type: 'line',
     data: {
-        labels: data.map(x => x.day),
+        labels: data.map((x) => x.day),
         datasets: [{
             data: data.map(x => x.count),
+            label: 'Completed habits',
+            data: data.map((x) => x.count),
+            fill: true,
+            borderColor: '#ff6b6b',
+            backgroundColor: 'rgba(255, 107, 107, 0.2)',
+            tension: 0.36,
         }]
+    },
+    options: {
+        plugins: {
+            legend: {
+                labels: {
+                    color: '#e2e8f0'
+                }
+            }
+        },
+        scales: {
+            x: {
+                ticks: {
+                    color: '#cbd5e1'
+                },
+                grid: {
+                    color: 'rgba(148, 163, 184, 0.2)'
+                }
+            },
+            y: {
+                ticks: {
+                    color: '#cbd5e1'
+                },
+                grid: {
+                    color: 'rgba(148, 163, 184, 0.2)'
+                }
+            }
+        }
     }
 });
 </script>

@@ -1,31 +1,131 @@
-{% extends 'base.html' %}
+{% extends 'index.html' %}
 
 {% block content %}
+<div class="page-header">
+    <h1>Today Overview</h1>
+    <span class="badge pending"><span class="btn-icon" aria-hidden="true">◆</span> Smart Focus Mode</span>
+</div>
 
 <div class="grid">
 
     <div class="card">
-        <h3>Habits</h3>
-        <p>{{ total_habits }}</p>
+        <h3>Total Habits</h3>
+        <p class="stat-value" data-counter="{{ total_habits }}">0</p>
     </div>
 
     <div class="card">
         <h3>Pending Tasks</h3>
-        <p>{{ pending_tasks }}</p>
+        <p class="stat-value" data-counter="{{ pending_tasks }}">0</p>
     </div>
 
+    <div class="card">
+        <h3>Completed Tasks</h3>
+        <p class="stat-value" data-counter="{{ completed_tasks }}">0</p>
+    </div>
+
+    <div class="card">
+        <h3>Habit Wins (7 Days)</h3>
+        <p class="stat-value" data-counter="{{ completed_habits_week }}">0</p>
+    </div>
+</div>
+
+<div class="grid dashboard-feature-grid">
+    <div class="card progress-card">
+        <div class="page-header">
+            <h3>Productivity Score</h3>
+            <span class="badge done">{{ completion_rate }}%</span>
+        </div>
+        <div class="progress-track">
+            <div class="progress-fill" style="width: {{ completion_rate }}%;"></div>
+        </div>
+        <p class="brand-subtitle">{{ productivity_message }}</p>
+
+        {% if badges %}
+            <div class="badge-row">
+                {% for badge in badges %}
+                    <span class="badge done">{{ badge }}</span>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="card focus-card">
+        <h3>Deep Focus Timer</h3>
+        <p id="focus-timer" class="focus-time">25:00</p>
+        <div class="inline-form">
+            <button type="button" id="focus-start">Start</button>
+            <button type="button" class="btn secondary" id="focus-reset">Reset</button>
+        </div>
+        <p class="brand-subtitle">Use 25-minute sessions to complete your highest-value task.</p>
+    </div>
 </div>
 
 <h3>Quick Habits</h3>
+<div class="list-stack" id="dashboard-habits">
+    {% for h in habits %}
+        <div class="item" data-filter-item>
+            <span>{{ h.title }}</span>
+            <span class="badge pending">habit</span>
+        </div>
+    {% empty %}
+        <div class="item"><span>No habits yet, start one today.</span></div>
+    {% endfor %}
+</div>
 
-{% for h in habits %}
-    <div class="item">{{ h.title }}</div>
-{% endfor %}
+<h3>Tasks In Focus</h3>
+<div class="list-stack" id="dashboard-tasks">
+    {% for t in tasks %}
+        <div class="item" data-filter-item>
+            <span>{{ t.title }}</span>
+            <span class="badge pending">task</span>
+        </div>
+    {% empty %}
+        <div class="item"><span>No pending tasks. Great job!</span></div>
+    {% endfor %}
+</div>
 
-<h3>Tasks</h3>
+<script>
+(() => {
+    const timerEl = document.getElementById('focus-timer');
+    const startBtn = document.getElementById('focus-start');
+    const resetBtn = document.getElementById('focus-reset');
 
-{% for t in tasks %}
-    <div class="item">{{ t.title }}</div>
-{% endfor %}
+    if (!timerEl || !startBtn || !resetBtn) {
+        return;
+    }
 
+    let remaining = 25 * 60;
+    let timerId = null;
+
+    const render = () => {
+        const min = String(Math.floor(remaining / 60)).padStart(2, '0');
+        const sec = String(remaining % 60).padStart(2, '0');
+        timerEl.textContent = `${min}:${sec}`;
+    };
+
+    startBtn.addEventListener('click', () => {
+        if (timerId) {
+            return;
+        }
+        timerId = setInterval(() => {
+            if (remaining <= 0) {
+                clearInterval(timerId);
+                timerId = null;
+                return;
+            }
+            remaining -= 1;
+            render();
+        }, 1000);
+    });
+
+    resetBtn.addEventListener('click', () => {
+        clearInterval(timerId);
+        timerId = null;
+        remaining = 25 * 60;
+        render();
+    });
+
+    render();
+})();
+</script>
 {% endblock %}

@@ -1,14 +1,137 @@
-<div id="profile-box">
+{% extends 'index.html' %}
 
-    <form method="post"
-          hx-post="{% url 'profile' %}"
-          hx-swap="none">
-
-        {% csrf_token %}
-        {{ form.as_p }}
-
-        <button type="submit">Save</button>
-
-    </form>
-
+{% block content %}
+<div class="page-header">
+    <h2>Your Profile</h2>
+    <span class="badge pending">Personal Hub</span>
 </div>
+
+<div class="profile-layout">
+    <section class="card profile-card">
+        <div class="profile-top">
+            <div class="avatar-shell">
+                <img
+                    id="profile-avatar-preview"
+                    src="{% if request.user.profile.avatar %}{{ request.user.profile.avatar.url }}{% endif %}"
+                    alt="Profile avatar"
+                    class="avatar-preview {% if not request.user.profile.avatar %}is-hidden{% endif %}">
+                <div id="profile-avatar-fallback" class="avatar-fallback {% if request.user.profile.avatar %}is-hidden{% endif %}">
+                    {{ request.user.username|slice:":1"|upper }}
+                </div>
+            </div>
+
+            <div>
+                <h3>{{ request.user.get_full_name|default:request.user.username }}</h3>
+                <p class="brand-subtitle">{{ request.user.profile.headline|default:"Update your profile and keep your goals visible." }}</p>
+            </div>
+        </div>
+
+        <form method="post" enctype="multipart/form-data" class="profile-form">
+            {% csrf_token %}
+
+                        <div class="form-row avatar-field">
+                <label for="id_avatar">Avatar</label>
+                <div class="avatar-input-wrap">
+                    {% if request.user.profile.avatar %}
+                        <label for="avatar-clear_id" class="avatar-clear-row">
+                            <input type="checkbox" name="avatar-clear" id="avatar-clear_id">
+                            <span>Clear</span>
+                        </label>
+                    {% endif %}
+                    <input type="file" name="avatar" id="id_avatar" accept="image/*" data-avatar-input="true">
+                </div>
+                {{ profile_form.avatar.errors }}
+            </div>
+
+            <div class="form-row">
+                <label for="{{ user_form.first_name.id_for_label }}">First name</label>
+                {{ user_form.first_name }}
+                {{ user_form.first_name.errors }}
+            </div>
+
+            <div class="form-row">
+                <label for="{{ user_form.last_name.id_for_label }}">Last name</label>
+                {{ user_form.last_name }}
+                {{ user_form.last_name.errors }}
+            </div>
+
+            <div class="form-row">
+                <label for="{{ user_form.username.id_for_label }}">Username</label>
+                {{ user_form.username }}
+                {{ user_form.username.errors }}
+            </div>
+
+            <div class="form-row">
+                <label for="{{ user_form.email.id_for_label }}">Email</label>
+                {{ user_form.email }}
+                {{ user_form.email.errors }}
+            </div>
+
+            <div class="form-row">
+                <label for="{{ profile_form.headline.id_for_label }}">Headline</label>
+                {{ profile_form.headline }}
+                {{ profile_form.headline.errors }}
+            </div>
+
+            <div class="form-row">
+                <label for="{{ profile_form.bio.id_for_label }}">Bio</label>
+                {{ profile_form.bio }}
+                {{ profile_form.bio.errors }}
+            </div>
+
+            <button type="submit">Save Profile</button>
+        </form>
+    </section>
+
+    <section class="profile-side">
+        <div class="card">
+            <h3>Profile Stats</h3>
+            <div class="grid">
+                <div class="card mini-stat">
+                    <span>Total Habits</span>
+                    <strong>{{ total_habits }}</strong>
+                </div>
+                <div class="card mini-stat">
+                    <span>Total Tasks</span>
+                    <strong>{{ total_tasks }}</strong>
+                </div>
+                <div class="card mini-stat">
+                    <span>Completed Tasks</span>
+                    <strong>{{ completed_tasks }}</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Recent Habits</h3>
+            <div class="list-stack">
+                {% for habit in active_habits %}
+                    <div class="item">
+                        <span>{{ habit.title }}</span>
+                        <span class="badge done">active</span>
+                    </div>
+                {% empty %}
+                    <div class="item">No habits yet.</div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+</div>
+<script>
+const avatarInput = document.querySelector('[data-avatar-input="true"]');
+const avatarPreview = document.getElementById('profile-avatar-preview');
+const avatarFallback = document.getElementById('profile-avatar-fallback');
+
+if (avatarInput && avatarPreview && avatarFallback) {
+    avatarInput.addEventListener('change', (event) => {
+        const [file] = event.target.files;
+        if (!file) {
+            return;
+        }
+        avatarPreview.src = URL.createObjectURL(file);
+        avatarPreview.classList.remove('is-hidden');
+        avatarFallback.classList.add('is-hidden');
+    });
+}
+</script>
+{% endblock %}

@@ -1,0 +1,10 @@
+<div class="avatar-input-wrap">
+    {% if widget.is_initial %}
+        <label for="{{ widget.checkbox_id }}" class="avatar-clear-row">
+            <input type="checkbox" name="{{ widget.checkbox_name }}" id="{{ widget.checkbox_id }}">
+            <span>Clear</span>
+        </label>
+    {% endif %}
+
+    <input type="{{ widget.type }}" name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}>
+</div>

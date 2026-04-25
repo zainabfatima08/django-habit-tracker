@@ -1,31 +1,55 @@
-{% extends 'base.html' %}
+{% extends 'index.html' %}
 
 {% block content %}
-
-<h2>Tasks</h2>
-
-<form method="post" action="{% url 'task_create' %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button>Add Task</button>
-</form>
-
-{% for t in tasks %}
-<div class="item">
-
-    <strong>{{ t.title }}</strong>
-
-    <button hx-post="{% url 'task_toggle' t.id %}"
-            hx-swap="innerHTML">
-        Toggle
-    </button>
-
-    <form method="post" action="{% url 'task_delete' t.id %}">
-        {% csrf_token %}
-        <button>Delete</button>
-    </form>
-
+<div class="page-header">
+    <h2>Tasks</h2>
 </div>
-{% endfor %}
 
+<div class="card">
+    <form method="post" action="{% url 'task_create' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Add Task</button>
+    </form>
+</div>
+
+<div class="card search-card">
+    <input type="text" placeholder="Search tasks instantly..." data-filter-input="#task-list">
+</div>
+
+<div class="list-stack" id="task-list">
+    {% for t in tasks %}
+    <div class="item task-item" data-filter-item>
+        <div>
+            <strong>{{ t.title }}</strong>
+            <div class="task-meta">
+                <span class="badge pending">Due: {{ t.due_date }}</span>
+                {% if t.priority == 'H' %}
+                    <span class="badge priority-high">High Priority</span>
+                {% elif t.priority == 'M' %}
+                    <span class="badge priority-medium">Medium Priority</span>
+                {% else %}
+                    <span class="badge priority-low">Low Priority</span>
+                {% endif %}
+                {% if t.is_overdue %}
+                    <span class="badge overdue">Overdue</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="inline-form">
+            <button hx-post="{% url 'task_toggle' t.id %}" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' hx-swap="innerHTML">
+                Toggle
+            </button>
+
+            <form method="post" action="{% url 'task_delete' t.id %}">
+                {% csrf_token %}
+                <button type="submit" class="danger">Delete</button>
+            </form>
+        </div>
+    </div>
+    {% empty %}
+        <div class="item">No tasks available.</div>
+    {% endfor %}
+</div>
 {% endblock %}
